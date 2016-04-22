@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QSet<int> set;
+    QSet<int> tabu;
     QVector<double> vec;
 
     double L[5][5] = { {0,38,74,59,45},
@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
                          {2, 1, 0, 2, 2},
                          {2, 1, 2, 0, 1},
                          {2, 1, 2, 1, 0} };
-
-    int tabu[5] = {0};
 
     double P[5][5] = {{0}};
 
@@ -73,7 +71,7 @@ int main(int argc, char *argv[])
             double sum = Sum(i, L, tau, ny);
             P[i][j] = 100.0 * ( pow(ny[i][j], alpha) * pow(tau[i][j], beta) ) / sum;
             cout << "P" << i+1 << j+1 << ": " << P[i][j] << endl;
-            set << i;
+            tabu << i;
             tmp += P[i][j];
             vec.push_back(tmp);
         }

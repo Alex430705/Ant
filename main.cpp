@@ -169,4 +169,12 @@ double Sum(int index, double tau[][5], double ny[][5] , QVector<int> tabu)
             sum += (double)ny[index][j] * (double)tau[index][j];
     }
     return sum;
+
+
+
+
+
+
+
+
 }

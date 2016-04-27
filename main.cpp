@@ -19,10 +19,17 @@ using namespace std;
 
 double Sum(int index, double tau[][5], double ny[][5], QVector<int> tabu); //Суммирует ню и тау в знаменателе вероятностей
 
+template<typename T>
+void ZeroArray(T array)
+{
+    for (int i=0; i<5; ++i)
+        for (int j=0; j<5; ++j)
+            array[i][j] = 0.0;
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QVector<double> vec;
     int bestWay = -1;
 
     double L[5][5] = { {0,38,74,59,45},
@@ -92,7 +99,7 @@ int main(int argc, char *argv[])
                     v.push_back(0.0);
                 }
             }
-            int myP = qrand() % 100 + 1;
+            int myP = qrand() % 99 + 1;
             partial_sum(v.begin(), v.end(), v.begin());
             vector<double>::iterator iter = upper_bound(v.begin(),v.end(), myP);
             int to = iter - v.begin();
@@ -110,26 +117,19 @@ int main(int argc, char *argv[])
             qDebug() << "best way = " << bestWay;
         }
         //остовляем феромон на пути муравья
-        for( int i = 0; i < tabu.count(); ++i)
+        for( int i = 0; i < tabu.count()-1; ++i)
         {
-            tau[i][i+1] += Q/length;
-            tau[i+1][i] = tau[i][i+1];
-        }
-        for(int i=0; i<5; ++i)
-        {
-            for(int j=0; j<5; ++j)
-            {
-                cout << tau[i][j] << " ";
-            }
-            cout << endl;
-        }
-        cout << endl;
+            tau[tabu.at(i)][tabu.at(i+1)] += Q/length;
+            tau[tabu.at(i+1)][tabu.at(i)] = tau[tabu.at(i)][tabu.at(i+1)];
+        } 
+
         //испаряем феромон
         for (int i=0; i<5; ++i)
             for (int j=0; j<5; ++j)
                if (i != j) tau[i][j] *= (1-RHO);
         way.clear();
         tabu.clear();
+        ZeroArray(P);
     }
     return a.exec();
 }
